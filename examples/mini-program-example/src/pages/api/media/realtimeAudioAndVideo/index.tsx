@@ -1,6 +1,6 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text, ScrollView, LivePlayer } from '@tarojs/components'
+import { View, Button, Text, ScrollView, LivePusher, LivePlayer } from '@tarojs/components'
 import ButtonList from '@/components/buttonList'
 import { TestConsole } from '@/util/util'
 import './index.scss'
@@ -9,13 +9,21 @@ import './index.scss'
  * 媒体-实时音视频
  * @returns
  */
+let LivePusherContext
 let LivePlayerContext
 export default class Index extends React.Component {
+  pusherRef: any
   state = {
     list: [
+      //创建LivePusherContext 实例
       {
         id: 'createLivePusherContext',
-        func: null,
+        func: (apiIndex) => {
+          TestConsole.consoleTest('createLivePusherContext')
+          LivePusherContext = Taro.createLivePusherContext()
+          // LivePusherContext = this.pusherRef
+          TestConsole.consoleNormal('createLivePusherContext ', LivePusherContext)
+        },
       },
       {
         id: 'createLivePlayerContext',
@@ -227,18 +235,400 @@ export default class Index extends React.Component {
           }
         },
       },
+      // 开始推流
       {
-        id: 'LivePusherContext',
-        func: null,
+        id: 'LivePusher_start',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('start');
+            LivePusherContext.start({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 暂停推流
+      {
+        id: 'LivePusher_pause',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('pause');
+            LivePusherContext.pause({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 恢复推流
+      {
+        id: 'LivePusher_resume',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('resume');
+            LivePusherContext.resume({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 停止推流
+      {
+        id: 'LivePusher_stop',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('stop');
+            LivePusherContext.stop({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 设置麦克风音量大小
+      {
+        id: 'LivePusher_setMICVolume',
+        inputData: {
+          MICVolume: 0.5
+        },
+        func: (apiIndex, data: { MICVolume: any }) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('setMICVolume');
+            LivePusherContext.setMICVolume(
+              {
+                ...data,
+                success: (res) => {
+                  TestConsole.consoleSuccess.call(this, res, apiIndex)
+                  TestConsole.consoleResult.call(this, res, apiIndex)
+                },
+                fail: (res) => {
+                  TestConsole.consoleFail.call(this, res, apiIndex)
+                },
+                complete: (res) => {
+                  TestConsole.consoleComplete.call(this, res, apiIndex)
+                }
+              })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 播放背景音
+      {
+        id: 'LivePusher_playBGM',
+        inputData: {
+          src: 'https://storage.360buyimg.com/jdrd-blog/27.mp3',
+        },
+        func: (apiIndex, data) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('playBGM');
+            LivePusherContext.playBGM({
+                ...data,
+                success: (res) => {
+                  TestConsole.consoleSuccess.call(this, res, apiIndex)
+                  TestConsole.consoleResult.call(this, res, apiIndex)
+                },
+                fail: (res) => {
+                  TestConsole.consoleFail.call(this, res, apiIndex)
+                },
+                complete: (res) => {
+                  TestConsole.consoleComplete.call(this, res, apiIndex)
+                }
+              })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 设置背景音音量
+      {
+        id: 'LivePusher_setBGMVolume',
+        inputData: {
+          Volume: 0.5,
+        },
+        func: (apiIndex, data) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('setBGMVolume');
+            LivePusherContext.setBGMVolume({
+              ...data,
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 暂停播放背景音
+      {
+        id: 'LivePusher_pauseBGM',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('pauseBGM');
+            LivePusherContext.pauseBGM({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 恢复播放背景音
+      {
+        id: 'LivePusher_resumeBGM',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('resumeBGM');
+            LivePusherContext.resumeBGM({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 停止播放背景音
+      {
+        id: 'LivePusher_stopBGM',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('stopBGM');
+            LivePusherContext.stopBGM({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 开启摄像头预览
+      {
+        id: 'LivePusher_startPreview',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('startPreview');
+            LivePusherContext.startPreview({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 关闭摄像头预览
+      {
+        id: 'LivePusher_stopPreview',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('stopPreview');
+            LivePusherContext.stopPreview({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 切换前后置摄像头
+      {
+        id: 'LivePusher_switchCamera',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('switchCamera');
+            LivePusherContext.switchCamera({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 切换手电筒
+      {
+        id: 'LivePusher_toggleTorch',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('toggleTorch');
+            LivePusherContext.toggleTorch({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 快照截屏
+      {
+        id: 'LivePusher_snapshot',
+        func: (apiIndex) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('snapShot');
+            LivePusherContext.snapshot({
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
+      },
+      // 发送SEI消息
+      {
+        id: 'LivePusher_sendMessage',
+        inputData: {
+          msg: '这是一个简单的SEI消息',
+        },
+        func: (apiIndex, data: { msg: string }) => {
+          if (LivePusherContext) {
+            TestConsole.consoleTest('sendMessage');
+            LivePusherContext.sendMessage({
+              ...data,
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
+                TestConsole.consoleResult.call(this, res, apiIndex)
+              },
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
+              },
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
+              }
+            })
+          } else {
+            TestConsole.consoleTest('------LivePusherContext未创建------')
+          }
+        },
       },
     ],
   }
-  render() {
+  render () {
     const { list } = this.state
     return (
       //@ts-ignore
       <View className='api-page'>
-        <ButtonList buttonList={list} />
+        {/* <LivePusher ref={(ref: any) => (this.pusherRef = ref)}/> */}
+        <LivePusher/>
         <LivePlayer
           id='LivePlayer'
           src='https://sf1-cdn-tos.huoshanstatic.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-480p.flv'
@@ -247,6 +637,7 @@ export default class Index extends React.Component {
           soundMode='ear'
           type='flv'
         ></LivePlayer>
+        <ButtonList buttonList={list} />
       </View>
     )
   }
