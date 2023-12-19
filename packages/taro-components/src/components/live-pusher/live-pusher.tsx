@@ -1266,102 +1266,12 @@ export class LivePusher implements ComponentInterface {
             }
           }
 
-          // 引入mediasoup库
-          const mediasoup = require('mediasoup')
-          // 创建mediasoup路由器
-          const worker = await mediasoup.createWorker()
-          const router = await worker.createRouter()
-
-          const transport1 = await router.createWebRtcTransport({ listenIps: [{ ip: '0.0.0.0', announcedIp: null }] })
-          const producer1 = await transport1.produce({ track: this.audioTrack })
-          const producer2 = await transport1.produce({ track: this.videoTrack })
-
-          // 创建mediasoup本地音视频轨道
-          const consumer1 = await transport1.consume({ id: producer1.id, kind: 'audio' })
-          const consumer2 = await transport1.consume({ id: producer2.id, kind: 'video' })
-
           // 创建canvas元素和渲染上下文
           const canvas = document.createElement('canvas')
-          const context = canvas.getContext('2d')
-
-          // 创建video元素上下文
-          const videoElement = this.videoRef
 
           // 设置canvas尺寸和旋转角度
           canvas.width = this.videoTrack.getSettings().width
           canvas.height = this.videoTrack.getSettings().height
-          let rotation = 0
-
-          // 监听设备方向变化事件
-          window.addEventListener('resize', () => {
-            if (window.innerHeight > window.innerWidth) {
-              // 设备为竖直方向，设置旋转角度为90度
-              rotation = 90
-            } else {
-              // 设备为水平方向，设置旋转角度为0度
-              rotation = 0
-            }
-          })
-
-          // 监听audio轨道的数据可用事件
-          consumer1.track.onended = () => {
-            console.log('Audio track ended')
-          }
-
-          consumer1.track.onunmute = () => {
-            const audioElement = document.createElement('audio')
-            audioElement.srcObject = new MediaStream([consumer1.track])
-
-            // 监听音频播放事件
-            audioElement.onplay = () => {
-              // 可以在这里加入相应的处理逻辑
-            }
-          }
-
-          // 监听video轨道的数据可用事件
-          consumer2.track.onended = () => {
-            console.log('Video track ended')
-          }
-
-          consumer2.track.onunmute = () => {
-            const videoElement = document.createElement('video')
-            videoElement.srcObject = new MediaStream([consumer2.track])
-
-            // 监听视频播放事件
-            videoElement.onplay = () => {
-              // 在视频播放前开始绘制画面
-              drawFrame()
-            }
-          }
-
-          function drawFrame () {
-            if (context) {
-              // 清空canvas
-              context.clearRect(0, 0, canvas.width, canvas.height)
-
-              // 保存当前状态
-              context.save()
-
-              // 设置旋转中心和旋转角度
-              context.translate(canvas.width / 2, canvas.height / 2)
-              context.rotate((rotation * Math.PI) / 180)
-
-              // 绘制视频帧到canvas
-              context.drawImage(videoElement, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height)
-
-              // 恢复状态
-              context.restore()
-            }
-
-            // 将canvas画面转换为Blob对象并进行录制等后续处理
-            canvas.toBlob(() => {
-              // 处理Blob对象，比如上传至服务器或本地保存等操作
-              // ...
-            })
-
-            // 继续下一帧绘制
-            requestAnimationFrame(drawFrame)
-          }
 
           // this.setBackgroundMusic()     //背景音乐
 
