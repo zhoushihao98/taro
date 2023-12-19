@@ -39,7 +39,9 @@
     "test:ci": "pnpm test -- --ci --no-build",
     "test:coverage": "pnpm test -- --ci --screenshot --coverage",
     "test:watch": "pnpm test -- --screenshot --watch",
-    "tsx": "ts-node --skipIgnore"
+    "tsx": "ts-node --skipIgnore",
+    "lint": "eslint src/components/live-pusher --ext .js --ext .ts --ext .tsx",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" && eslint src --ext .js --ext .jsx --ext .ts --ext .tsx --fix"
   },
   "repository": {
     "type": "git",

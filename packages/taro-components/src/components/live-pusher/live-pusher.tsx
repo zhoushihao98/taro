@@ -141,60 +141,60 @@ export class LivePusher implements ComponentInterface {
   @Event({
     eventName: 'stateChange',
   })
-  onStateChange: EventEmitter
+    onStateChange: EventEmitter
 
   // 渲染错误事件，detail = {errMsg, errCode}
   @Event({
     eventName: 'error',
   })
-  onError: EventEmitter
+    onError: EventEmitter
 
   // 返回麦克风采集的音量大小
   @Event({
     eventName: 'audioVolumeNotify',
   })
-  onAudioVolumeNotify: EventEmitter
+    onAudioVolumeNotify: EventEmitter
 
   // 网络状态通知，detail = {info}
   @Event({
     eventName: 'netStatus',
   })
-  onNetStatus: EventEmitter
+    onNetStatus: EventEmitter
 
   // 进入小窗
   @Event({
     eventName: 'enterPictureInPicture',
   })
-  onEnterPictureInPicture: EventEmitter
+    onEnterPictureInPicture: EventEmitter
 
   // 退出小窗
   @Event({
     eventName: 'leavePictureInPicture',
   })
-  onLeavePictureInPicture: EventEmitter
+    onLeavePictureInPicture: EventEmitter
 
   // 开始播放背景音乐
   @Event({
     eventName: 'bgmStart',
   })
-  onBgmStart: EventEmitter
+    onBgmStart: EventEmitter
 
   // 暂停播放背景音乐
   @Event({
     eventName: 'bgmPause',
   })
-  onBgmPause: EventEmitter
+    onBgmPause: EventEmitter
 
   // 背景音乐播放完成
   @Event({
     eventName: 'bgmComplete',
   })
-  onBgmComplete: EventEmitter
+    onBgmComplete: EventEmitter
 
   @Event({
     eventName: 'bgmProgress',
   })
-  onBgmProgress: EventEmitter
+    onBgmProgress: EventEmitter
 
   // 获取的媒体流
   @State() mediaStream
@@ -1169,13 +1169,13 @@ export class LivePusher implements ComponentInterface {
       navigator.mediaDevices.enumerateDevices()
         .then(function (devices) {
           devices.forEach(function (device) {
-            console.log('设备ID:', device.deviceId);
-            console.log('设备名称:', device.label);
-          });
+            console.log('设备ID:', device.deviceId)
+            console.log('设备名称:', device.label)
+          })
         })
         .catch(function (err) {
-          console.error('获取设备列表时发生错误:', err);
-        });
+          console.error('获取设备列表时发生错误:', err)
+        })
 
       // 音视频配置
       const mediaOption = {
@@ -1217,7 +1217,7 @@ export class LivePusher implements ComponentInterface {
             this.videoTrack = stream.getVideoTracks()[0]
 
             // 设置视频宽高比、帧率、码率
-            let videoConstraints: any = {
+            const videoConstraints: any = {
               aspectRatio: this.aspect === '16:9' ? 16 / 9 : 4 / 3, // 视频宽高比
               frameRate:
                 this.fps >= 30 && this.fps <= 1 ? this.fps : this.fps >= 30 ? 30 : this.fps <= 1 ? 1 : this.fps, // 帧率
@@ -1229,10 +1229,10 @@ export class LivePusher implements ComponentInterface {
 
             // 设置采样率
             if ('getCapabilities' in this.audioTrack) {
-              let capabilities = this.audioTrack.getCapabilities()
+              const capabilities = this.audioTrack.getCapabilities()
               if ('sampleRate' in capabilities) {
-                let desiredSampleRate = this.audioQuality === 'high' ? 48000 : 16000 // 设置期望的采样率，可以是 48000（高音质）或 16000（低音质）
-                let settings = { sampleRate: desiredSampleRate }
+                const desiredSampleRate = this.audioQuality === 'high' ? 48000 : 16000 // 设置期望的采样率，可以是 48000（高音质）或 16000（低音质）
+                const settings = { sampleRate: desiredSampleRate }
 
                 this.audioTrack
                   .applyConstraints(settings)
@@ -1267,100 +1267,100 @@ export class LivePusher implements ComponentInterface {
           }
 
           // 引入mediasoup库
-          const mediasoup = require('mediasoup');
+          const mediasoup = require('mediasoup')
           // 创建mediasoup路由器
-          const worker = await mediasoup.createWorker();
-          const router = await worker.createRouter();
+          const worker = await mediasoup.createWorker()
+          const router = await worker.createRouter()
 
-          const transport1 = await router.createWebRtcTransport({ listenIps: [{ ip: '0.0.0.0', announcedIp: null }] });
-          const producer1 = await transport1.produce({ track: this.audioTrack });
-          const producer2 = await transport1.produce({ track: this.videoTrack });
+          const transport1 = await router.createWebRtcTransport({ listenIps: [{ ip: '0.0.0.0', announcedIp: null }] })
+          const producer1 = await transport1.produce({ track: this.audioTrack })
+          const producer2 = await transport1.produce({ track: this.videoTrack })
 
           // 创建mediasoup本地音视频轨道
-          const consumer1 = await transport1.consume({ id: producer1.id, kind: 'audio' });
-          const consumer2 = await transport1.consume({ id: producer2.id, kind: 'video' });
+          const consumer1 = await transport1.consume({ id: producer1.id, kind: 'audio' })
+          const consumer2 = await transport1.consume({ id: producer2.id, kind: 'video' })
 
           // 创建canvas元素和渲染上下文
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
+          const canvas = document.createElement('canvas')
+          const context = canvas.getContext('2d')
 
-          //创建video元素上下文
+          // 创建video元素上下文
           const videoElement = this.videoRef
 
           // 设置canvas尺寸和旋转角度
-          canvas.width = this.videoTrack.getSettings().width;
-          canvas.height = this.videoTrack.getSettings().height;
-          let rotation = 0;
+          canvas.width = this.videoTrack.getSettings().width
+          canvas.height = this.videoTrack.getSettings().height
+          let rotation = 0
 
           // 监听设备方向变化事件
           window.addEventListener('resize', () => {
             if (window.innerHeight > window.innerWidth) {
               // 设备为竖直方向，设置旋转角度为90度
-              rotation = 90;
+              rotation = 90
             } else {
               // 设备为水平方向，设置旋转角度为0度
-              rotation = 0;
+              rotation = 0
             }
-          });
+          })
 
           // 监听audio轨道的数据可用事件
           consumer1.track.onended = () => {
-            console.log('Audio track ended');
-          };
+            console.log('Audio track ended')
+          }
 
           consumer1.track.onunmute = () => {
-            const audioElement = document.createElement('audio');
-            audioElement.srcObject = new MediaStream([consumer1.track]);
+            const audioElement = document.createElement('audio')
+            audioElement.srcObject = new MediaStream([consumer1.track])
 
             // 监听音频播放事件
             audioElement.onplay = () => {
               // 可以在这里加入相应的处理逻辑
-            };
-          };
+            }
+          }
 
           // 监听video轨道的数据可用事件
           consumer2.track.onended = () => {
-            console.log('Video track ended');
-          };
+            console.log('Video track ended')
+          }
 
           consumer2.track.onunmute = () => {
-            const videoElement = document.createElement('video');
-            videoElement.srcObject = new MediaStream([consumer2.track]);
+            const videoElement = document.createElement('video')
+            videoElement.srcObject = new MediaStream([consumer2.track])
 
             // 监听视频播放事件
             videoElement.onplay = () => {
               // 在视频播放前开始绘制画面
-              drawFrame();
-            };
-          };
+              drawFrame()
+            }
+          }
 
           function drawFrame () {
             if (context) {
               // 清空canvas
-              context.clearRect(0, 0, canvas.width, canvas.height);
+              context.clearRect(0, 0, canvas.width, canvas.height)
 
               // 保存当前状态
-              context.save();
+              context.save()
 
               // 设置旋转中心和旋转角度
-              context.translate(canvas.width / 2, canvas.height / 2);
-              context.rotate((rotation * Math.PI) / 180);
+              context.translate(canvas.width / 2, canvas.height / 2)
+              context.rotate((rotation * Math.PI) / 180)
 
               // 绘制视频帧到canvas
-              context.drawImage(videoElement, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+              context.drawImage(videoElement, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height)
 
               // 恢复状态
-              context.restore();
+              context.restore()
             }
 
             // 将canvas画面转换为Blob对象并进行录制等后续处理
             canvas.toBlob(() => {
               // 处理Blob对象，比如上传至服务器或本地保存等操作
               // ...
-            });
+            })
 
             // 继续下一帧绘制
-            requestAnimationFrame(drawFrame);
+            requestAnimationFrame(drawFrame)
           }
 
           // this.setBackgroundMusic()     //背景音乐
@@ -1416,7 +1416,7 @@ export class LivePusher implements ComponentInterface {
           // }
 
           // 开始录制
-          await this.mediaRecorder.start(8000);
+          await this.mediaRecorder.start(8000)
 
           this.mediaRecorder.addEventListener('dataavailable', async (event) => {
             if (event.data.size > 0) {
@@ -1425,21 +1425,21 @@ export class LivePusher implements ComponentInterface {
                 console.log('arrayBuffer data is', res)
                 // @ts-ignore         
                 native.startRtmp(res, this.url)
-              });
+              })
 
             } else {
               console.log('暂无录制数据，不进行推流')
             }
-          });
+          })
 
 
           this.mediaRecorder.onerror = function (error) {
-            console.error('录制发生错误:', error);
-          };
+            console.error('录制发生错误:', error)
+          }
 
           this.mediaRecorder.onstop = () => {
-            console.log('录制已停止');
-          };
+            console.log('录制已停止')
+          }
 
         })
         .catch((error) => {
@@ -1466,12 +1466,12 @@ export class LivePusher implements ComponentInterface {
   // }
   saveArrayBuffer = async (blob) => {
     return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
+      const fileReader = new FileReader()
       fileReader.onerror = reject
       fileReader.onload = () => {
         resolve(fileReader.result)
-      };
-      fileReader.readAsArrayBuffer(blob);
+      }
+      fileReader.readAsArrayBuffer(blob)
     })
   }
 
