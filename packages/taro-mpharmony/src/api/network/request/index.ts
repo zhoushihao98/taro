@@ -60,10 +60,36 @@ function taroInterceptor (chain) {
 const { Link } = Taro
 const link = new Link(taroInterceptor)
 
+/**
+ * 发起 HTTPS 网络请求
+ * 
+ * @canUse request
+ * @__object [url, data, header, timeout, method[OPTIONS, GET, HEAD, POST, PUT, PATCH, DELETE, TRACE, CONNECT], responseType[text, arraybuffer], enableCache]
+ * @__success [data, header, statusCode, cookies]
+ */
 export function request (options) {
   const result = link.request.bind(link)(options)
   result.catch(() => {})
   return result
 }
+
+/**
+ * 网络请求任务对象
+ * 
+ * @canUse RequestTask
+ * @__class [abort, onHeadersReceived, offHeadersReceived]
+ */
+
+/**
+ * 使用拦截器
+ * 
+ * @canNotUse addInterceptor
+ */
 export const addInterceptor = link.addInterceptor.bind(link)
+
+/**
+ * 清除所有拦截器
+ * 
+ * @canNotUse cleanInterceptors
+ */
 export const cleanInterceptors = link.cleanInterceptors.bind(link)

@@ -1,20 +1,21 @@
-import Taro from '@tarojs/api'
 import { SwiperProps } from '@tarojs/components'
 import {
   defineCustomElementTaroSwiperCore,
   defineCustomElementTaroSwiperItemCore,
 } from '@tarojs/components/dist/components'
+import { eventCenter } from '@tarojs/runtime'
 import { isFunction } from '@tarojs/shared'
+import Taro from '@tarojs/taro'
 
 import { shouldBeObject } from '../../../utils'
 import { MethodHandler } from '../../../utils/handler'
 
 /**
  * previewImage api基于开源的React组件[react-wx-images-viewer](https://github.com/react-ld/react-wx-images-viewer)开发，感谢！
- */
-
-/**
  * 在新页面中全屏预览图片/视频。预览的过程中用户可以进行保存图片/视频、发送给朋友等操作。
+ * 
+ * @canUse previewMedia
+ * @__object [sources, current]
  */
 export const previewMedia: typeof Taro.previewMedia = async (options) => {
   // TODO 改为通过 window.__taroAppConfig 获取配置的 Swiper 插件创建节点
@@ -71,9 +72,16 @@ export const previewMedia: typeof Taro.previewMedia = async (options) => {
   container.classList.add('preview-image')
   container.style.cssText =
     'position:fixed;top:0;left:0;z-index:1050;width:100%;height:100%;overflow:hidden;outline:0;background-color:#111;'
-  container.addEventListener('click', () => {
+
+  const removeHandler = () => {
+    eventCenter.off('__taroRouterChange', removeHandler)
     container.remove()
-  })
+    eventCenter.trigger('__taroExitFullScreen', {})
+  }
+  container.addEventListener('click', removeHandler)
+
+  // 路由改变后应该关闭预览框
+  eventCenter.on('__taroRouterChange', removeHandler)
 
   const swiper: HTMLElement & Omit<SwiperProps, 'style' | 'children'> = document.createElement('taro-swiper-core')
   // @ts-ignore
@@ -101,6 +109,7 @@ export const previewMedia: typeof Taro.previewMedia = async (options) => {
 
   container.appendChild(swiper)
   document.body.appendChild(container)
+  eventCenter.trigger('__taroEnterFullScreen', {})
 
   return handle.success()
 }

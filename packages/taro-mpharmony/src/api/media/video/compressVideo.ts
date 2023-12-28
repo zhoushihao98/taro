@@ -2,6 +2,12 @@ import Taro from '@tarojs/taro'
 import { getParameterError, shouldBeObject } from 'src/utils'
 import { MethodHandler } from 'src/utils/handler'
 
+/**
+ * 压缩视频接口
+ * 
+ * @canUse compressVideo
+ * @null_implementation
+ */
 export const compressVideo: typeof Taro.compressVideo = (options) => {
   const name = 'compressVideo'
 

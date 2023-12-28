@@ -1,36 +1,72 @@
-import { permanentlyNotSupport, temporarilyNotSupport } from '../../utils'
+/** 
+ * 更新转发属性 
+ * 
+ * @canNotUse updateShareMenu
+*/
+export { updateShareMenu } from '@tarojs/taro-h5'
 
-// 转发
-
-/** 更新转发属性 */
-export const updateShareMenu = /* @__PURE__ */ temporarilyNotSupport('updateShareMenu')
-
-/** 显示当前页面的转发按钮 */
-// null-implementation
+/** 
+ * 显示当前页面的转发按钮 
+ * 
+ * @canUse showShareMenu
+ * @null_implementation
+*/
 export const showShareMenu = () => Promise.resolve({})
 
-/** 打开分享图片弹窗，可以将图片发送给朋友、收藏或下载 */
-export const showShareImageMenu = /* @__PURE__ */ temporarilyNotSupport('showShareImageMenu')
+/** 
+ * 打开分享图片弹窗，可以将图片发送给朋友、收藏或下载 
+ * 
+ * @canNotUse showShareImageMenu
+*/
+export { showShareImageMenu } from '@tarojs/taro-h5'
 
-/** 转发视频到聊天 */
-export const shareVideoMessage = /* @__PURE__ */ temporarilyNotSupport('shareVideoMessage')
+/** 
+ * 转发视频到聊天 
+ * 
+ * @canNotUse shareVideoMessage
+*/
+export { shareVideoMessage } from '@tarojs/taro-h5'
 
-/** 转发文件到聊天 */
-export const shareFileMessage = /* @__PURE__ */ temporarilyNotSupport('shareFileMessage')
+/** 
+ * 转发文件到聊天 
+ * 
+ * @canNotUse shareFileMessage
+*/
+export { shareFileMessage } from '@tarojs/taro-h5'
 
-/** 监听用户点击右上角菜单的「复制链接」按钮时触发的事件 */
-export const onCopyUrl = /* @__PURE__ */ temporarilyNotSupport('onCopyUrl')
+/** 
+ * 监听用户点击右上角菜单的「复制链接」按钮时触发的事件 
+ * 
+ * @canNotUse onCopyUrl
+*/
+export { onCopyUrl } from '@tarojs/taro-h5'
 
-/** 移除用户点击右上角菜单的「复制链接」按钮时触发的事件的监听函数 */
-export const offCopyUrl = /* @__PURE__ */ temporarilyNotSupport('offCopyUrl')
+/** 
+ * 移除用户点击右上角菜单的「复制链接」按钮时触发的事件的监听函数 
+ * 
+ * @canNotUse offCopyUrl
+*/
+export { offCopyUrl } from '@tarojs/taro-h5'
 
-/** 隐藏当前页面的转发按钮 */
-// null-implementation
+/** 
+ * 隐藏当前页面的转发按钮 
+ * 
+ * @canUse hideShareMenu
+ * @null_implementation
+*/
 export const hideShareMenu = () => Promise.resolve({})
 
-/** 获取转发详细信息 */
-// null-implementation
+/** 
+ * 获取转发详细信息 
+ * 
+ * @canUse getShareInfo
+ * @null_implementation 
+*/
 export const getShareInfo = () => Promise.resolve({})
 
-/** 验证私密消息。 */
-export const authPrivateMessage = /* @__PURE__ */ permanentlyNotSupport('authPrivateMessage')
+/** 
+ * 验证私密消息 
+ * 
+ * @canNotUse authPrivateMessage
+*/
+export { authPrivateMessage } from '@tarojs/taro-h5'

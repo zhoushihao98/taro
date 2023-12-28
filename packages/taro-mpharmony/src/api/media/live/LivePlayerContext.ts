@@ -1,5 +1,13 @@
 import Taro from '@tarojs/taro'
 
+/**
+ * LivePlayerContext 实例
+ * 
+ * @canUse LivePlayerContext
+ * @__class 
+ * [exitFullScreen, exitPictureInPicture, mute, pause, play, requestFullScreen, requestPictureInPicture, resume,\
+ * snapshot, stop]
+ */
 export class LivePlayerContext implements Taro.LivePlayerContext {
   LivePlayer: any
   constructor (LivePlayer) {
@@ -104,14 +112,14 @@ export class LivePlayerContext implements Taro.LivePlayerContext {
     this.LivePlayer._snapshot(_option)
       .then((result) => {
         _option?.success?.(result)
+        _option?.complete?.(result)
       })
       .catch((err) => {
         _option?.fail?.(err)
-      })
-      .finally(() => {
-        _option?.complete?.({ errMsg: `ok` })
+        _option?.complete?.(err)
       })
   }
+
 
   startCasting (_option?: Taro.LivePlayerContext.StartCastingOption | undefined): void {
     throw new Error('Method not implemented.')

@@ -1,6 +1,10 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
+<<<<<<< HEAD
 import { View, Button, Text, ScrollView, LivePusher, LivePlayer } from '@tarojs/components'
+=======
+import { View, Button,  LivePlayer } from '@tarojs/components'
+>>>>>>> 42beeeda083c732d4bc478f79c16d13b4cf147b6
 import ButtonList from '@/components/buttonList'
 import { TestConsole } from '@/util/util'
 import './index.scss'
@@ -180,6 +184,20 @@ export default class Index extends React.Component {
               ...data,
               success: (res) => {
                 TestConsole.consoleSuccess.call(this, res, apiIndex)
+                Taro.saveImageToPhotosAlbum({
+                  filePath: res.tempImagePath,
+                  success: (res) => {
+                    TestConsole.consoleSuccess.call(this, res, apiIndex)
+                  },
+                  fail: (res) => {
+                    TestConsole.consoleFail.call(this, res, apiIndex)
+                  },
+                  complete: (res) => {
+                    TestConsole.consoleComplete.call(this, res, apiIndex)
+                  },
+                }).then((res) => {
+                  TestConsole.consoleResult.call(this, res, apiIndex)
+                })
               },
               fail: (res) => {
                 TestConsole.consoleFail.call(this, res, apiIndex)
@@ -621,12 +639,37 @@ export default class Index extends React.Component {
         },
       },
     ],
+    src: '',
+    srcurl: 'https://hls-xjhsy.sobeylive.com/xjwlmqapp2019/211_q_live170191539951308.flv',
+    isShow: true,
+    iscache: false,
+  }
+  handleInputChangeSrc = (e) => {
+    this.setState({
+      src: e.target.value,
+    })
+  }
+  handleClickSrc = async () => {
+    let srcurl = this.state.src
+    await this.setState({
+      srcurl,
+    })
+  }
+  hendleFullScreenChange(e) {
+    console.log('hendleFullScreenChange', e)
+  }
+  updates = async () => {
+    let iscache = !this.state.iscache
+    await this.setState({
+      iscache,
+    })
   }
   render () {
     const { list } = this.state
     return (
       //@ts-ignore
       <View className='api-page'>
+<<<<<<< HEAD
         {/* <LivePusher ref={(ref: any) => (this.pusherRef = ref)}/> */}
         <LivePusher/>
         <LivePlayer
@@ -638,6 +681,22 @@ export default class Index extends React.Component {
           type='flv'
         ></LivePlayer>
         <ButtonList buttonList={list} />
+=======
+        <ButtonList buttonList={list} />
+        {this.state.isShow && (
+          <LivePlayer
+            id='LivePlayer'
+            maxCache={3}
+            minCache={1}
+            src={this.state.srcurl}
+            iscache={this.state.iscache}
+            onFullScreenChange={this.hendleFullScreenChange}
+          ></LivePlayer>
+        )}
+        <Button onClick={this.updates}>显示缓冲秒数</Button>
+        src: <input type='text' name='username' onChange={this.handleInputChangeSrc} />{' '}
+        <Button onClick={this.handleClickSrc}>确定</Button>
+>>>>>>> 42beeeda083c732d4bc478f79c16d13b4cf147b6
       </View>
     )
   }

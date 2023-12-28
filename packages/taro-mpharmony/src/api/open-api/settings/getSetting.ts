@@ -2,6 +2,13 @@ import Taro from '@tarojs/api'
 import { shouldBeObject } from 'src/utils'
 import { MethodHandler } from 'src/utils/handler'
 
+/**
+ * 获取用户的当前设置
+ * 
+ * @canUse getSetting
+ * @__object [withSubscriptions]
+ * @__success [authSetting, subscriptionsSetting, miniprogramAuthSetting]
+ */
 export const getSetting: typeof Taro.getSetting = function (options) {
   const name = 'getSetting'
 
@@ -27,8 +34,8 @@ export const getSetting: typeof Taro.getSetting = function (options) {
     (res: any) => {
       const result: Taro.getSetting.SuccessCallbackResult = {
         authSetting: res.authSetting,
-        subscriptionsSetting: res.subscriptionsSetting,
-        miniprogramAuthSetting: res.miniprogramAuthSetting,
+        subscriptionsSetting: res.subscriptionsSetting || {},
+        miniprogramAuthSetting: {},
         errMsg: res.errMsg,
       }
       handle.success(result)

@@ -1,5 +1,13 @@
-import { temporarilyNotSupport } from '../../utils'
+/**
+ * 动态设置下拉背景字体、loading 图的样式
+ * 
+ * @canNotUse setBackgroundTextStyle
+ */
+export { setBackgroundTextStyle } from '@tarojs/taro-h5'
 
-// 背景
-export const setBackgroundTextStyle = /* @__PURE__ */ temporarilyNotSupport('setBackgroundTextStyle')
-export const setBackgroundColor = /* @__PURE__ */ temporarilyNotSupport('setBackgroundColor')
+/**
+ * 动态设置窗口的背景色
+ * 
+ * @canNotUse setBackgroundColor
+ */
+export { setBackgroundColor } from '@tarojs/taro-h5'

@@ -1,9 +1,15 @@
-import { temporarilyNotSupport } from '../../../utils'
+/**
+ * 蓝牙配对接口
+ * 
+ * @canNotUse makeBluetoothPair
+ */
+export { makeBluetoothPair } from '@tarojs/taro-h5'
 
-// 蓝牙-通用
-export const makeBluetoothPair = /* @__PURE__ */ temporarilyNotSupport('makeBluetoothPair')
-export const isBluetoothDevicePaired = /* @__PURE__ */ temporarilyNotSupport('isBluetoothDevicePaired')
-
+/**
+ * 查询蓝牙设备是否配对
+ * 
+ * @canNotUse isBluetoothDevicePaired
+ */
 export * from './closeBluetoothAdapter'
 export * from './getBluetoothAdapterState'
 export * from './getBluetoothDevices'
@@ -15,3 +21,4 @@ export * from './onBluetoothDeviceFound'
 export * from './openBluetoothAdapter'
 export * from './startBluetoothDevicesDiscovery'
 export * from './stopBluetoothDevicesDiscovery'
+export { isBluetoothDevicePaired } from '@tarojs/taro-h5'

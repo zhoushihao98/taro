@@ -1,6 +1,7 @@
-import { temporarilyNotSupport } from '../../../utils'
-
-// 联系人
-export const chooseContact = /* @__PURE__ */ temporarilyNotSupport('chooseContact')
-
+/**
+ * 添加手机通讯录联系人
+ * 
+ * @canNotUse chooseContact
+ */
 export * from './addPhoneContact'
+export { chooseContact } from '@tarojs/taro-h5'

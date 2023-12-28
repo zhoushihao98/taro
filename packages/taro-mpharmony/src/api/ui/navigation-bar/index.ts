@@ -14,16 +14,17 @@ function loadNavigationSytle () {
   }
   // @ts-ignore
   const naviHeight = window.navigationHeight ? window.navigationHeight : 0
-  // 设置transform属性使得页面内position:fixed的元素相对于页面定位而不是视口(viewport)
   const css = `
-.taro_navigation {
-  display: block;
-  width: 100%;
-  height: ${naviHeight}px;
+.taro_router .taro_page.taro_navigation_page {
+  padding-top: ${naviHeight}px;
 }
 
-.taro_navi_page {
-  transform: translateZ(0);
+.taro-tabbar__container .taro_page.taro_navigation_page {
+  max-height: calc(100vh - ${naviHeight}px);
+}
+
+.taro-tabbar__container .taro_page.taro_tabbar_page.taro_navigation_page {
+  max-height: calc(100vh - 50px - ${naviHeight}px);
 }`
   addStyle(css)
 }
@@ -32,6 +33,8 @@ loadNavigationSytle()
 
 /**
  * 显示页面导航条加载图标
+ * 
+ * @canUse showNavigationBarLoading
  */
 export const showNavigationBarLoading: typeof Taro.showNavigationBarLoading = (options?) => {
   const { success, fail, complete } = (options || {}) as Exclude<typeof options, undefined>
@@ -44,6 +47,8 @@ export const showNavigationBarLoading: typeof Taro.showNavigationBarLoading = (o
 
 /**
  * 隐藏页面导航条加载图标
+ * 
+ * @canUse hideNavigationBarLoading
  */
 export const hideNavigationBarLoading: typeof Taro.hideNavigationBarLoading = (options?) => {
   const { success, fail, complete } = (options || {}) as Exclude<typeof options, undefined>
@@ -56,6 +61,9 @@ export const hideNavigationBarLoading: typeof Taro.hideNavigationBarLoading = (o
 
 /**
  * 设置页面导航条标题
+ * 
+ * @canUse setNavigationBarTitle
+ * @__object [title]
  */
 export const setNavigationBarTitle: typeof Taro.hideNavigationBarLoading = (
   options?: Taro.setNavigationBarTitle.Option
@@ -85,9 +93,11 @@ export const setNavigationBarTitle: typeof Taro.hideNavigationBarLoading = (
 
   return handle.success()
 }
-
 /**
  * 设置页面导航条颜色
+ * 
+ * @canUse setNavigationBarColor
+ * @__object [backgroundColor, frontColor, animation]
  */
 export const setNavigationBarColor: typeof Taro.setNavigationBarColor = (options) => {
   const apiName = 'setNavigationBarColor'
@@ -134,5 +144,10 @@ export const setNavigationBarColor: typeof Taro.setNavigationBarColor = (options
   return handle.success()
 }
 
-// null-implementation
+/**
+ * 隐藏返回首页按钮
+ * 
+ * @canUse hideHomeButton
+ * @null_implementation
+ */
 export const hideHomeButton = () => Promise.resolve()

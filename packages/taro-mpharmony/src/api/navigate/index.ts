@@ -1,15 +1,43 @@
 import Taro from '@tarojs/api'
+import { shouldBeObject } from 'src/utils'
 import { MethodHandler } from 'src/utils/handler'
 
-import { shouldBeObject, temporarilyNotSupport } from '../../utils'
 import { showModal } from '../ui/index'
 
-// 跳转
-export const openEmbeddedMiniProgram = /* @__PURE__ */ temporarilyNotSupport('openEmbeddedMiniProgram')
-export const navigateBackMiniProgram = /* @__PURE__ */ temporarilyNotSupport('navigateBackMiniProgram')
-export const exitMiniProgram = /* @__PURE__ */ temporarilyNotSupport('exitMiniProgram')
-export const openBusinessView = /* @__PURE__ */ temporarilyNotSupport('openBusinessView')
+/**
+ * 打开半屏小程序
+ * 
+ * @canNotUse openEmbeddedMiniProgram
+ */
+export { openEmbeddedMiniProgram } from '@tarojs/taro-h5'
 
+/**
+ * 返回到上一个小程序
+ * 
+ * @canNotUse navigateBackMiniProgram
+ */
+export { navigateBackMiniProgram } from '@tarojs/taro-h5'
+
+/**
+ * 退出当前小程序
+ * 
+ * @canNotUse exitMiniProgram
+ */
+export { exitMiniProgram } from '@tarojs/taro-h5'
+
+/**
+ * 打开微信支付分小程序，引导用户查看订单详情
+ * 
+ * @canNotUse openBusinessView
+ */
+export { openBusinessView } from '@tarojs/taro-h5'
+
+/**
+* 打开另一个小程序
+* 
+* @canUse navigateToMiniProgram
+* @__object [appId, path, extraData]
+*/
 export const navigateToMiniProgram: typeof Taro.navigateToMiniProgram = (options) => {
   const apiName = 'navigateToMiniProgram'
   // options must be an Object

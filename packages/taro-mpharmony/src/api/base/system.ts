@@ -1,12 +1,20 @@
 import Taro from '@tarojs/api'
 
-import { shouldBeObject, temporarilyNotSupport } from '../../utils'
+import { shouldBeObject } from '../../utils'
 import { MethodHandler } from '../../utils/handler'
 
-/** 跳转系统蓝牙设置页 */
-export const openSystemBluetoothSetting = /* @__PURE__ */ temporarilyNotSupport('openSystemBluetoothSetting')
+/**
+ * 跳转系统蓝牙设置页
+ *
+ * @canNotUse openSystemBluetoothSetting
+ */
+export { openSystemBluetoothSetting } from '@tarojs/taro-h5'
 
-/** 跳转系统应用授权管理页 */
+/**
+ * 跳转系统授权管理页
+ *
+ * @canUse openAppAuthorizeSetting
+ */
 export const openAppAuthorizeSetting: typeof Taro.openAppAuthorizeSetting = (options) => {
   const name = 'openAppAuthorizeSetting'
   const isObject = shouldBeObject(options)
@@ -32,49 +40,73 @@ export const openAppAuthorizeSetting: typeof Taro.openAppAuthorizeSetting = (opt
   })
 }
 
-/** 获取窗口信息 */
+/**
+ * 获取窗口信息
+ *
+ * @canUse getWindowInfo
+ * @__return
+ * [pixelRatio, screenWidth, screenHeight, windowWidth, windowHeight, statusBarHeight, safeArea[\
+ * bottom, height, left, right, top, width]]
+ */
 export const getWindowInfo: typeof Taro.getWindowInfo = () => {
   // @ts-ignore
   const info = native.getWindowInfo()
   const windowInfo: Taro.getWindowInfo.Result = {
     pixelRatio: info.pixelRatio,
-    screenWidth: info.pixelRatio,
+    screenWidth: info.screenWidth,
     screenHeight: info.screenHeight,
-    windowWidth: info.windowWidth,
-    windowHeight: info.windowHeight,
+    windowWidth: info.screenWidth,
+    // @ts-ignore
+    windowHeight: info.screenHeight - (window?.currentNavigation?.style === 'default' ? (window.navigationHeight || 0) : 0),
     statusBarHeight: info.statusBarHeight,
     safeArea: info.safeArea || {
       /** 安全区域右下角纵坐标 */
-      bottom: info.windowHeight,
-      /** 安全区域的高度，单位逻辑像素, 窗口可用区域高度-状态栏高度-导航栏高度 */
-      height: info.windowHeight - info.statusBarHeight - 40,
+      bottom: info.screenHeight,
+      /** 安全区域的高度，单位逻辑像素, 窗口可用区域高度-状态栏高度 */
+      height: info.screenHeight - info.statusBarHeight,
       /** 安全区域左上角横坐标 */
       left: 0,
       /** 安全区域右下角横坐标 */
-      right: info.windowWidth,
-      /** 安全区域左上角纵坐标, 状态栏高度+导航栏高度（当前固定为40px） */
-      top: info.statusBarHeight + 40,
+      right: info.screenWidth,
+      /** 安全区域左上角纵坐标, 状态栏高度 */
+      top: info.statusBarHeight,
       /** 安全区域的宽度，单位逻辑像素 */
-      width: info.windowWidth
+      width: info.screenWidth
     },
   }
   return windowInfo
 }
 
-/** 获取设备设置 */
+const lastSystemSettingResult: Taro.getSystemSetting.Result = {}
+let lastGetSystemSettingTime = 0
+
+/**
+ * 获取设备设置
+ *
+ * @canUse getSystemSetting
+ * @__return [bluetoothEnabled, locationEnabled, wifiEnabled, deviceOrientation[portrait, landscape]]
+ */
 export const getSystemSetting: typeof Taro.getSystemSetting = () => {
+  const currentTime = Date.now()
+  if (currentTime - lastGetSystemSettingTime < 500) {
+    return lastSystemSettingResult
+  }
   // @ts-ignore
   const info = native.getSystemSetting()
-  const systemSetting: Taro.getSystemSetting.Result = {
-    bluetoothEnabled: info.bluetoothEnabled,
-    locationEnabled: info.locationEnabled,
-    wifiEnabled: info.wifiEnabled,
-    deviceOrientation: info.deviceOrientation,
-  }
-  return systemSetting
+  lastSystemSettingResult.bluetoothEnabled = info.bluetoothEnabled
+  lastSystemSettingResult.locationEnabled = info.locationEnabled
+  lastSystemSettingResult.wifiEnabled = info.wifiEnabled
+  lastSystemSettingResult.deviceOrientation = info.deviceOrientation
+  lastGetSystemSettingTime = currentTime
+  return lastSystemSettingResult
 }
 
-/** 获取设备信息 */
+/**
+ * 获取设备基础信息
+ *
+ * @canUse getDeviceInfo
+ * @__return [benchmarkLevel, brand, model, system, platform]
+ */
 export const getDeviceInfo: typeof Taro.getDeviceInfo = () => {
   // @ts-ignore
   const info = native.getDeviceInfo()
@@ -94,7 +126,12 @@ export const getDeviceInfo: typeof Taro.getDeviceInfo = () => {
   return deviceInfo
 }
 
-/** 获取APP基础信息 */
+/**
+ * 获取APP基础信息
+ *
+ * @canUse getAppBaseInfo
+ * @__return [SDKVersion, enableDebug, host[appId], language, version, theme[dark, light]]
+ */
 export const getAppBaseInfo: typeof Taro.getAppBaseInfo = () => {
   // @ts-ignore
   const info = native.getAppBaseInfo()
@@ -111,7 +148,14 @@ export const getAppBaseInfo: typeof Taro.getAppBaseInfo = () => {
   return appBaseInfo
 }
 
-/** 获取APP授权设置 */
+/**
+ * 获取APP授权设置
+ *
+ * @canUse getAppAuthorizeSetting
+ * @__return
+ * [albumAuthorized, bluetoothAuthorized, cameraAuthorized, locationAuthorized, locationReducedAccuracy,\
+ * microphoneAuthorized, notificationAuthorized, phoneCalendarAuthorized]
+ */
 export const getAppAuthorizeSetting: typeof Taro.getAppAuthorizeSetting = () => {
   // @ts-ignore
   const info = native.getAppAuthorizeSetting()
@@ -137,7 +181,17 @@ export const getAppAuthorizeSetting: typeof Taro.getAppAuthorizeSetting = () => 
   return appAuthorizeSetting
 }
 
-/** 获取设备设置 */
+/**
+ * 获取系统信息Taro.getSystemInfo的同步版本
+ *
+ * @canUse getSystemInfoSync
+ * @__return
+ * [brand, model, pixelRatio, screenWidth, screenHeight, windowWidth, windowHeight, statusBarHeight,\
+ * language, version, system, platform, fontSizeSetting, SDKVersion, benchmarkLevel, albumAuthorized,\
+ * cameraAuthorized, locationAuthorized, microphoneAuthorized, notificationAuthorized, phoneCalendarAuthorized,\
+ * bluetoothEnabled, locationEnabled, wifiEnabled, safeArea[bottom, height, left, right, top, width],\
+ * locationReducedAccuracy, theme[dark, light], host[appId], enableDebug, deviceOrientation[portrait, landscape]]
+ */
 export const getSystemInfoSync: typeof Taro.getSystemInfoSync = () => {
   // @ts-ignore
   const info = native.getSystemInfoSync()
@@ -151,17 +205,17 @@ export const getSystemInfoSync: typeof Taro.getSystemInfoSync = () => {
     /** 设备型号 */
     model: info.model,
     /** 设备像素比 */
-    pixelRatio: info.pixelRatio,
+    pixelRatio: windowInfo.pixelRatio,
     /** 屏幕宽度，单位px */
-    screenWidth: info.screenWidth,
+    screenWidth: windowInfo.screenWidth,
     /** 屏幕高度，单位px */
-    screenHeight: info.screenHeight,
+    screenHeight: windowInfo.screenHeight,
     /** 可使用窗口宽度，单位px */
-    windowWidth: info.windowWidth,
+    windowWidth: windowInfo.windowWidth,
     /** 可使用窗口高度，单位px */
-    windowHeight: info.windowHeight,
+    windowHeight: windowInfo.windowHeight,
     /** 状态栏的高度，单位px */
-    statusBarHeight: info.statusBarHeight,
+    statusBarHeight: windowInfo.statusBarHeight,
     /** 微信设置的语言 */
     language: info.language,
     /** 微信版本号 */
@@ -212,7 +266,17 @@ export const getSystemInfoSync: typeof Taro.getSystemInfoSync = () => {
   return systemInfoSync
 }
 
-/** 获取系统信息 */
+/**
+ * 异步获取系统信息
+ *
+ * @canUse getSystemInfoAsync
+ * @__success
+ * [brand, model, pixelRatio, screenWidth, screenHeight, windowWidth, windowHeight, statusBarHeight,\
+ * language, version, system, platform, fontSizeSetting, SDKVersion, benchmarkLevel, albumAuthorized,\
+ * cameraAuthorized, locationAuthorized, microphoneAuthorized, notificationAuthorized, phoneCalendarAuthorized,\
+ * bluetoothEnabled, locationEnabled, wifiEnabled, safeArea[bottom, height, left, right, top, width],\
+ * locationReducedAccuracy, theme[dark, light], host[appId], enableDebug, deviceOrientation[portrait, landscape]]
+ */
 export const getSystemInfoAsync: typeof Taro.getSystemInfoAsync = async (options = {}) => {
   const { success, fail, complete } = options
   const handle = new MethodHandler({ name: 'getSystemInfoAsync', success, fail, complete })
@@ -226,7 +290,17 @@ export const getSystemInfoAsync: typeof Taro.getSystemInfoAsync = async (options
   }
 }
 
-/** 获取系统信息 */
+/**
+ * 获取系统信息
+ *
+ * @canUse getSystemInfo
+ * @__success
+ * [brand, model, pixelRatio, screenWidth, screenHeight, windowWidth, windowHeight, statusBarHeight,\
+ * language, version, system, platform, fontSizeSetting, SDKVersion, benchmarkLevel, albumAuthorized,\
+ * cameraAuthorized, locationAuthorized, microphoneAuthorized, notificationAuthorized, phoneCalendarAuthorized,\
+ * bluetoothEnabled, locationEnabled, wifiEnabled, safeArea[bottom, height, left, right, top, width],\
+ * locationReducedAccuracy, theme[dark, light], host[appId], enableDebug, deviceOrientation[portrait, landscape]]
+ */
 export const getSystemInfo: typeof Taro.getSystemInfo = async (options = {}) => {
   const { success, fail, complete } = options
   const handle = new MethodHandler({ name: 'getSystemInfo', success, fail, complete })

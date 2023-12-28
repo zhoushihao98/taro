@@ -1,4 +1,12 @@
-import { temporarilyNotSupport } from '../../utils'
+/**
+ * 创建 WebGL 画面录制器
+ * 
+ * @canNotUse createMediaRecorder
+ */
+export { createMediaRecorder } from '@tarojs/taro-h5'
 
-// 画面录制器
-export const createMediaRecorder = /* @__PURE__ */ temporarilyNotSupport('createMediaRecorder')
+/**
+ * 画面录制器
+ * 
+ * @canNotUse MediaRecorder
+ */
